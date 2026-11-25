@@ -11,6 +11,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
+private val categoriasUnicas = listOf("Personal", "Trabajo", "Estudio", "Salud", "Otros")
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CrearScreen(
@@ -18,14 +20,12 @@ fun CrearScreen(
     onTituloChange: (String) -> Unit,
     onDescripcionChange: (String) -> Unit,
     onPrioridadChange: (Prioridad) -> Unit,
-    onGuardar: (String) -> Unit, // Recibe la categoría elegida
+    onGuardar: (String) -> Unit,
     onCancelar: () -> Unit,
     onGuardadoExitoso: () -> Unit
 ) {
-    // Manejo local de la categoría usando  DatosSimulados
     var categoriaSeleccionada by remember { mutableStateOf(categoriasUnicas.first()) }
 
-    // Reacciona cuando el ViewModel avisa que se guardó correctamente (basado en pág. 41 y 63)
     LaunchedEffect(estado.guardado) {
         if (estado.guardado) {
             onGuardadoExitoso()
@@ -52,7 +52,6 @@ fun CrearScreen(
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Título
             CampoTextoControlado(
                 valor = estado.titulo,
                 etiqueta = "Título (Obligatorio)",
@@ -60,14 +59,12 @@ fun CrearScreen(
                 mensajeError = estado.errorTitulo
             )
 
-            // Descripción
             CampoTextoControlado(
                 valor = estado.descripcion,
                 etiqueta = "Descripción (Opcional)",
                 onValorCambia = onDescripcionChange
             )
 
-            // Selector de Categoría (Opciones definidas)
             Text("Categoría:", style = MaterialTheme.typography.titleMedium)
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 categoriasUnicas.forEach { cat ->
@@ -79,7 +76,6 @@ fun CrearScreen(
                 }
             }
 
-            // Selector de Prioridad
             Text("Prioridad:", style = MaterialTheme.typography.titleMedium)
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 listOf(Prioridad.Alta, Prioridad.Media, Prioridad.Baja).forEach { prio ->
@@ -93,12 +89,10 @@ fun CrearScreen(
                 }
             }
 
-            // Mensaje de error general de guardado
             if (estado.errorGeneral != null) {
                 Text(text = estado.errorGeneral, color = MaterialTheme.colorScheme.error)
             }
 
-            // Botones Cancelar y Guardar
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End,
@@ -110,7 +104,6 @@ fun CrearScreen(
                 Spacer(modifier = Modifier.width(8.dp))
                 Button(
                     onClick = { onGuardar(categoriaSeleccionada) },
-                    // Regla de Rúbrica: Deshabilitado si hay error o enviando
                     enabled = estado.errorTitulo == null && estado.titulo.trim().length >= 4 && !estado.enviando
                 ) {
                     if (estado.enviando) {

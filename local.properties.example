@@ -1,0 +1,3 @@
+# Archivo de ejemplo para configurar la URL base del servicio remoto.
+# Copiar esta propiedad en local.properties (no subir credenciales reales).
+API_BASE_URL=https://api.recordatorios.local/

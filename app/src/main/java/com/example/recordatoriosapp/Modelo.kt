@@ -1,6 +1,7 @@
 package com.example.recordatoriosapp
 
-// Uso de sealed class para estados limitados y controlados
+import com.example.recordatoriosapp.data.local.SyncStatus
+
 sealed class Prioridad(val nombre: String) {
     object Alta : Prioridad("Alta")
     object Media : Prioridad("Media")
@@ -12,12 +13,13 @@ sealed class Estado(val nombre: String) {
     object Completada : Estado("Completada")
 }
 
-// Uso de data class para modelar la entidad principal
 data class Recordatorio(
-    val id: Long,
+    val id: String,
     val titulo: String,
     val categoria: String,
     val prioridad: Prioridad,
     val estado: Estado,
-    val descripcion: String? = null // Null safety para la nota opcional
+    val descripcion: String? = null,
+    val fechaCreacion: Long = System.currentTimeMillis(),
+    val syncStatus: SyncStatus = SyncStatus.PENDING
 )
